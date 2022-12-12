@@ -1,51 +1,43 @@
-import React,{useState, useEffect, useRef} from 'react'
+import { useRef, useReducer} from 'react'
 import './App.css'
+
+import data from './data.json'
 import Result from './Result '
 
+function reducer(todos, action) {
+  switch (action.type) {
+    case 'Add':
+      return [...todos, newTodo(action.payload.name)]
+    case "checked":
+      return action.payload.Check
+    case "delet":
+      return action.payload.Check
+  }
+}
 
-function App (){
+function newTodo(inputRef) {
+  return { id: Date.now(), todo: inputRef, checkers: false }
+}
+
+function App() {
   const inputRef = useRef('')
-  const [Todo, setTodo] = useState([])
-  const [checked, setChecked] = useState(null)
-  const [item, setitem] = useState('')
-  let newData = {}
+  const [state, dispatch] = useReducer(reducer, data)
+
 
   const handleClick = () => {
-    if (inputRef.current.value) {
-      newData.id = Todo.length + 1
-      newData.todo = inputRef.current.value
-      // newData.status = 'pending'
-      newData.checkers = false
-      setTodo((val) => { return [...val, newData] })
-    }
+    dispatch({ type: 'Add', payload: { name: inputRef.current.value } })
   }
 
-  useEffect(() => {
-    Todo.map((value) => {
-      if (value.id === item.id && checked) {
-        value.status = 'pending'
-        console.log(checked) 
-      }
-      if (value.id === item.id && !checked) {
-        value.status = 'complete'
-        console.log(checked)
-      }
-    })
-  }, [checked])
- 
-  useEffect(()=>{ console.log(Todo)},[Todo])
-
   return (
-    <div className='App'>
-      <div className='App-wrap'>
-      <div className='input-holder'>
-        <div className='main-input'>
-        <input ref={inputRef} type="text" className='enter' placeholder='Add new Todo...' />
-        <button onClick={handleClick}>+</button>
+    <div className="App">
+      <div className='App_wrap'>
+        <div className='input-holder'>
+          <input ref={inputRef} placeholder='Add new Todo...' />
+          <button onClick={() => { handleClick(); }}>+</button>
         </div>
       </div>
-          <Result Todo={Todo} inputitem={setitem} status={setChecked} check={checked} setTodo={setTodo} />
-      </div>
+      <Result Todo={state} update={dispatch}/>
+      
     </div>
   )
 }

@@ -1,63 +1,88 @@
-import React from 'react'
+import { useRef } from 'react';
 import './App.css'
-import { MdDeleteOutline } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 
 
-function Result({ Todo, setTodo }){
 
-    const setChecked=(id)=>{
-        const newArr = Todo.map((i)=>  i.id === id? {...i, checkers : !i.checkers}: {...i});setTodo(newArr)
+
+const Result = ({ Todo, update }) => {
+    const ref = useRef(null);
+    let Total = Todo.length
+    let Completed = 0
+    let Pending = 0
+    Todo.map((item) => {
+        item.checkers ? Completed += 1 : Pending += 1
+    })
+
+
+    const setChecked = (id) => {
+        const newArr = Todo.map((i) => i.id === id ? { ...i, checkers: !i.checkers } : { ...i });
+        update({ type: "checked", payload: { Check: newArr } })
     }
 
-    const deleteItems = (id) =>{
-        const newArr = todo.filter((list)=> list !== id);
-        console.log(newArr)
-        setTodo(newArr)
+
+    const HandleDelete = (item) => {
+        let newList = Todo.filter((val) => { return val.id !== item.id })
+        // console.log(newList)
+        update({ type: "checked", payload: { Check: newList } })
     }
 
 
-  return (
-    <div className='Result'>
-        <div className='text'>            
-            <h2>Todo's</h2>
-            <p>3 Total, 2 complete and 1 pending</p>
-        </div>
-        <div className='todos'>
-            <div className='card'>
-                <p>#</p>
-                <p>Todo Title</p>
-                <div>
-                    <p>Status</p> 
+    const HandleFilter = () => {
+        let newfilter = Todo.filter((i) => { return !i.checkers })
+        update({ type: "delet", payload: { Check: newfilter } })
+    }
+
+
+    return (
+        <div className="Card">
+            <div className='Card_wrap'>
+                <div className="text">
+                    <h1>Todo's</h1>
+                    <div className="text1">
+                        <p>{Total} Total, {Completed} Complete and {Pending} Pending</p>
+                        
+                    </div>
+
+
+                </div>
+                <div className="card">
+                    <div className="card_head">
+                        <div className='card_top'>
+                            <div className='wrap'>
+                                <div className='parent'>
+                                    <p>#</p>
+                                    <p>Todo Title</p>
+                                </div>
+                                <p> Status</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='scroll'>
+                        {Todo?.map((item, index) => <div key={index} className="Main_card">
+                            <div className='Main_cardtop' style={{ backgroundColor: item.checkers === true ? '#b9f4b7' : "#fff" }} >
+                                <div className='wrap'>
+                                    <div className='parent'>
+                                        <input
+                                            type="checkbox"
+                                            ref={ref}
+                                            onChange={() => setChecked(item.id)}
+                                        />
+                                        <p>{item.todo}</p>
+                                    </div>
+                                    <div className='status'><p>{item.checkers ? "completed" : "pending"}
+                                    </p> <MdDelete onClick={() => { HandleDelete(item) }} /></div>
+                                </div>
+                            </div>
+                        </div>)}
+                    </div>
+
+
                 </div>
             </div>
 
-
-            <div className='scroll'>
-            {Todo?.map((item) => 
-                    <div key={item.id} className="Main">
-                       
-                                <div className='cards'  style={{backgroundColor: item.checkers=== true? '#b9f4b7': "#fff"}}>
-                                    <input
-                                     type="checkbox"
-                                     onChange={()=> setChecked(item.id)}
-                                      />
-                                    <p>{item.todo}</p>
-                               
-                                <p>{item.checkers? "completed": "pending"}</p>
-                                <button 
-                                    className="delete-button" 
-                                    onClick={()=>{deleteItems(item)}}>
-                                    <MdDeleteOutline /> 
-                                </button>
-              
-                                </div>
-                    </div>)}
-            </div>
-            </div>
-  </div>
-  )
+        </div>
+    )
 }
 
 export default Result;
-
-      
