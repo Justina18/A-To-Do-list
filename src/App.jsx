@@ -1,6 +1,7 @@
 import { useState,useRef, useReducer} from 'react'
-import './App.css'
-import data from './data.json'
+import './App.css';
+import Swal from 'sweetalert2'
+
 import Result from './Result '
 
 function reducer(todos, action) {
@@ -36,7 +37,16 @@ function App() {
           placeholder='Add new Todo...' 
           />
           <button 
-          onClick={() => { handleClick(); }}>+</button>
+          
+          onClick={() => {
+            Swal.fire({
+              position: 'top-end',
+              icon: 'success',
+              title: 'Your work has been saved',
+              showConfirmButton: false,
+              timer: 1500
+            })
+             handleClick(); }}>+</button>
         </div>
       </div>
       <Result 
