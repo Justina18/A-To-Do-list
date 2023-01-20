@@ -1,6 +1,5 @@
-import { useRef, useReducer} from 'react'
+import { useState,useRef, useReducer} from 'react'
 import './App.css'
-
 import data from './data.json'
 import Result from './Result '
 
@@ -10,7 +9,7 @@ function reducer(todos, action) {
       return [...todos, newTodo(action.payload.name)]
     case "checked":
       return action.payload.Check
-    case "delet":
+    case "delete":
       return action.payload.Check
   }
 }
@@ -21,7 +20,7 @@ function newTodo(inputRef) {
 
 function App() {
   const inputRef = useRef('')
-  const [state, dispatch] = useReducer(reducer, data)
+  const [state, dispatch] = useReducer(reducer, JSON.parse(localStorage.getItem('todo'))|| [])
 
 
   const handleClick = () => {
@@ -32,12 +31,17 @@ function App() {
     <div className="App">
       <div className='App_wrap'>
         <div className='input-holder'>
-          <input ref={inputRef} placeholder='Add new Todo...' />
-          <button onClick={() => { handleClick(); }}>+</button>
+          <input 
+          ref={inputRef} 
+          placeholder='Add new Todo...' 
+          />
+          <button 
+          onClick={() => { handleClick(); }}>+</button>
         </div>
       </div>
-      <Result Todo={state} update={dispatch}/>
-      
+      <Result 
+      Todo={state}
+       update={dispatch}/>.
     </div>
   )
 }

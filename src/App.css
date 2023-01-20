@@ -65,13 +65,13 @@ input {
   align-items: center;
   min-height: 300px;
 }
-.Card_wrap {
+.Card-holder{
   min-height: auto;
   width: 90%;
   height: 100%;
   padding: 10px;
 }
-.text {
+.texts{
   display: flex;
   flex-direction: column;
   color:rgb(36, 36, 36);
